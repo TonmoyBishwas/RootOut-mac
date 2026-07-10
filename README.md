@@ -53,6 +53,22 @@ swift test              # run the unit tests
 
 Requires Xcode 16+ on Apple Silicon. No dependencies.
 
+## Contributing
+
+RootOut is small on purpose, and staying small is the point. Before opening a
+PR, read [CONTRIBUTING.md](CONTRIBUTING.md) — it lists what's in scope and what
+has already been declined.
+
+- [CODEBASE.md](CODEBASE.md) — architecture, the deletion containment model,
+  and where things are likely to change
+- [SECURITY.md](SECURITY.md) — how RootOut decides what it's allowed to delete,
+  and how to report a file it shouldn't have touched
+- [docs/RELEASING.md](docs/RELEASING.md) — cutting a DMG release
+- [CLAUDE.md](CLAUDE.md) — guidance for AI coding agents working in this repo
+
+The most valuable bug report is any case where RootOut offers to delete a file
+that doesn't belong to the app you selected.
+
 ## License
 
 [MIT](LICENSE) — free forever.
