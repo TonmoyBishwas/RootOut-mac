@@ -82,8 +82,10 @@ final class AppState {
             return Uninstaller().uninstall(items: urls)
         }.value
 
-        failures = result.failed
+        // Clear the selection first: its didSet runs startScan(), which resets
+        // failures and phase. Assign the outcome after, so it survives.
         selectionID = nil
+        failures = result.failed
         phase = .done(result.summary)
         await refresh()
     }
