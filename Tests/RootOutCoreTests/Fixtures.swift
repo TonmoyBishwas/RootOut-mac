@@ -36,6 +36,16 @@ final class FixtureDir {
         return url
     }
 
+    /// Creates a symlink under the fixture root pointing at `destination`.
+    @discardableResult
+    func symlink(_ path: String, to destination: URL) throws -> URL {
+        let url = root.appendingPathComponent(path)
+        try FileManager.default.createDirectory(
+            at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: url, withDestinationURL: destination)
+        return url
+    }
+
     /// Creates a minimal .app bundle with an Info.plist under the fixture root.
     @discardableResult
     func app(_ path: String, bundleID: String, name: String? = nil, version: String = "1.0") throws -> URL {
