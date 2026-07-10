@@ -15,6 +15,7 @@ final class AppState {
     var checked: Set<URL> = []
     var phase: Phase = .idle
     var failures: [UninstallResult.Failure] = []
+    var isRefreshing = false
 
     var selectionID: URL? {
         didSet { if selectionID != oldValue { startScan() } }
@@ -34,10 +35,24 @@ final class AppState {
 
     private var scanTask: Task<Void, Never>?
 
+    /// Rescans the Applications folders. Safe to call while an uninstall's
+    /// result is on screen: the selection is already nil by then, so the
+    /// stale-selection check below can't fire and reset `phase`/`failures`.
     func refresh() async {
-        apps = await Task.detached(priority: .userInitiated) {
+        guard !isRefreshing else { return }
+        isRefreshing = true
+        defer { isRefreshing = false }
+
+        let found = await Task.detached(priority: .userInitiated) {
             AppInventory().installedApps()
         }.value
+        apps = found
+
+        // An app selected before the rescan may have been removed behind our
+        // back. Drop the selection so the detail pane doesn't sit on a ghost.
+        if let id = selectionID, !found.contains(where: { $0.id == id }) {
+            selectionID = nil
+        }
     }
 
     private func startScan() {

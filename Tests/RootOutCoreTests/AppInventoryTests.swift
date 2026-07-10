@@ -48,4 +48,17 @@ import Foundation
         let apps = AppInventory(searchURLs: [fx.root.appendingPathComponent("Apps")]).installedApps()
         #expect(apps.first?.name == "Plain")
     }
+
+    /// Backs the sidebar's refresh button: nothing is memoized, so an app
+    /// installed while RootOut is open shows up on the next scan.
+    @Test func rescanSeesAppInstalledAfterFirstScan() throws {
+        let fx = try FixtureDir()
+        let inventory = AppInventory(searchURLs: [fx.root])
+
+        try fx.app("Before.app", bundleID: "com.example.before")
+        #expect(inventory.installedApps().map(\.name) == ["Before"])
+
+        try fx.app("After.app", bundleID: "com.example.after")
+        #expect(inventory.installedApps().map(\.name) == ["After", "Before"])
+    }
 }
