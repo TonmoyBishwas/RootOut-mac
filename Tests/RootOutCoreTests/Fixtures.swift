@@ -5,9 +5,13 @@ final class FixtureDir {
     let root: URL
 
     init() throws {
-        root = FileManager.default.temporaryDirectory
+        // Canonicalize so fixture paths (/var/folders/…) compare equal to the
+        // /private/var/folders/… URLs that contentsOfDirectory returns.
+        let tmp = FileManager.default.temporaryDirectory
             .appendingPathComponent("RootOutTests-\(UUID().uuidString)", isDirectory: true)
-        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: tmp, withIntermediateDirectories: true)
+        let canonical = try tmp.resourceValues(forKeys: [.canonicalPathKey]).canonicalPath!
+        root = URL(fileURLWithPath: canonical, isDirectory: true)
     }
 
     deinit {
