@@ -141,8 +141,8 @@ disables Gatekeeper.
 ## Agent workflow notes
 
 - When dispatching subagents for research or mechanical tasks, override the
-  model to **Opus 4.8** or **Sonnet 5** — the owner asked for this to keep
-  token cost down.
+  model to a cheaper one than the main session (for example, the current
+  Sonnet) — the owner asked for this to keep token cost down.
 - `dist/` is gitignored. Build artifacts and the DMG live on GitHub Releases,
   never in the tree.
 - The shell in this environment usually lacks screen-recording permission, so
